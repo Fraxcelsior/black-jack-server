@@ -5,7 +5,7 @@ const User = require('../User/model')
 const Game = sequelize.define(
     'games',
     {
-        game_name: {
+        name: {
             type: Sequelize.STRING,
             field: 'game_name'
         }

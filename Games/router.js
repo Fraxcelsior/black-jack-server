@@ -12,7 +12,8 @@ function onStream( req, res) {
     Game
         .findAll()
         .then(games => {
-            stream.updateInit(games)
+            const json = JSON.stringify(games)
+            stream.updateInit(json)
             stream.init(req, res)
         })
         .catch(error => next(error))
@@ -20,6 +21,26 @@ function onStream( req, res) {
 // when fetching lobby URL, onMessage is called to list all available games
 // auth needs to be added before onStream
 app.get('/lobby', onStream)
+
+function onSend(req, res, next) {
+    const {name} = request.body
+
+    Game
+        .create({
+            name
+        })
+        .then(result => {
+            Game.findAll()
+            .then(games => {
+                const json = JSON.stringify(games)
+                stream.updateInit(json)
+                stream.send(json)
+            })
+            .then(games => res.send(games))
+        })
+}
+
+
 
 
 
