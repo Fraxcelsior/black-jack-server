@@ -17,5 +17,5 @@ const User = sequelize.define('users', {
     timestamps: false
   }
 )
-
+//user.save
 module.exports = User

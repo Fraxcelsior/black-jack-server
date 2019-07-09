@@ -13,8 +13,8 @@ const Card = sequelize.define('cards', {
   timestamps: false 
 }
 )
-User.belongsTo(Card)
-Card.hasMany(User)
+//User.addCard
+User.hasMany(Card)
 
 
 module.exports = Card
