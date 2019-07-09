@@ -9,8 +9,11 @@ const jsonParser = bodyParser.json()
 
 const User = require('./User/model')
 
+const authRouter = require('./Auth/router')
+
 app.use(cors())
 app.use(jsonParser)
+app.use(authRouter)
 
 
 
