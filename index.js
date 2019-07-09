@@ -6,6 +6,7 @@ const gamesRouter = require('./Games/router')
 
 const app = express()
 const jsonParser = bodyParser.json()
+
 app.use(cors())
 app.use(jsonParser)
 app.use(authRouter)
