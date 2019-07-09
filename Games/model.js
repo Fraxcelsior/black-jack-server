@@ -7,7 +7,7 @@ const Game = sequelize.define(
     {
         name: {
             type: Sequelize.STRING,
-            field: 'game_name'
+            field: 'name'
         }
     },
     { tableName: 'games'}

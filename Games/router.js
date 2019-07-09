@@ -15,15 +15,16 @@ function onStream( req, res) {
             const json = JSON.stringify(games)
             stream.updateInit(json)
             stream.init(req, res)
+            console.log('ONSTREAM', stream)
         })
         .catch(error => next(error))
 }
 // when fetching lobby URL, onMessage is called to list all available games
 // auth needs to be added before onStream
-router.get('/lobby', onStream)
+router.get('/lobby', auth, onStream)
 
 function onCreateGame(req, res, next) {
-    const {name} = request.body
+    const {name} = req.body
 
     Game
         .create({
@@ -35,11 +36,12 @@ function onCreateGame(req, res, next) {
                 const json = JSON.stringify(games)
                 stream.updateInit(json)
                 stream.send(json)
+                console.log('ONCREATE', stream)
             })
-            .then(games => res.send(games))
+            .then(games => res.json(games))
         })
         .catch(error => next(error))
 }
-router.post('/lobby', onCreateGame)
+router.post('/lobby', auth, onCreateGame)
 
 module.exports = router
