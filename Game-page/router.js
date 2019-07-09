@@ -9,7 +9,7 @@ const router = new Router()
 // stream sends data
 const stream = new Sse()
 
-//define player class
+//define player class: instances of Player will be used in state
 class Player {
     constructor(id) {
         this.id = id
@@ -20,13 +20,13 @@ class Player {
         this.busted = false //true if countHandValue > 21
     }
     // method to draw initial hand each round
-    initialiseStartingHand(hasCards) {
+    initialiseStartingHand() {
         if (this.hasCards.length < 2) {
             drawRandomCard()
         }
     }
     // method to score hand, still need to apply ace logic
-    countHandValue(hasCards) {
+    countHandValue() {
         let score = 0
 
         this.hasCards.reduce((acc, currentCard) => {
@@ -128,11 +128,21 @@ function drawRandomCard() {
     console.log('INDEX', index, 'CARD', deck[index], 'VALUE', cardValue)
 }
 
+function initializeRound() {
+    /* this function should reset certain things each round:
+     empty player hands /hasCards =[]
+     busted and stand false
+     betpoints = 0
+     make it so that round can start:
+     bet chips,
+     offer double, hit,stand options, which will be seperate functions
+    */
+    return gameState
+}
+
 function onStream(req, res) {
     //push user to gameState.activePlayers if neccesary
     //gameState.activePlayers.push(new Player(req.user))
-
-    //set points to 100    
 
     //this function should retrieve gameState and put it in init
     gameState => {
