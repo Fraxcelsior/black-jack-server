@@ -7,13 +7,15 @@ const app = express()
 const jsonParser = bodyParser.json()
 
 
-const User = require('./User/model')
+
 
 const authRouter = require('./Auth/router')
+const cardRouter = require('./Cards/router')
 
 app.use(cors())
 app.use(jsonParser)
 app.use(authRouter)
+app.use(cardRouter)
 
 
 
