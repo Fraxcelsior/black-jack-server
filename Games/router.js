@@ -20,9 +20,9 @@ function onStream( req, res) {
 }
 // when fetching lobby URL, onMessage is called to list all available games
 // auth needs to be added before onStream
-app.get('/lobby', onStream)
+router.get('/lobby', onStream)
 
-function onSend(req, res, next) {
+function onCreateGame(req, res, next) {
     const {name} = request.body
 
     Game
@@ -38,9 +38,8 @@ function onSend(req, res, next) {
             })
             .then(games => res.send(games))
         })
+        .catch(error => next(error))
 }
+router.post('/lobby', onCreateGame)
 
-
-
-
-
+module.exports = router
