@@ -23,24 +23,15 @@ const gameState = {
 }
 
 
-//define player class: instances of Player will be used in state
-class Player {
-    constructor(id) {
-        this.id = id
-        this.points = 100
-        this.hasCards = []
-        this.betpoints = 0 //the amount of points that a player bets
-        this.stand = false //true if stand is pressed
-        this.busted = false //true if countHandValue > 21
-    }
+
     // method to draw initial hand each round
-    initialiseStartingHand() {
+    function initialiseStartingHand() {
         if (this.hasCards.length < 2) {
             drawRandomCard()
         }
     }
     // method to score hand, still need to apply ace logic
-    countHandValue() {
+    function countHandValue() {
         let score = 0
 
         this.hasCards.reduce((acc, currentCard) => {
@@ -56,7 +47,7 @@ class Player {
         }, score)
         return score
     }
-}
+
 
 const deck = [
     {
