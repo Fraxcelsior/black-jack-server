@@ -9,6 +9,20 @@ const router = new Router()
 // stream sends data
 const stream = new Sse()
 
+
+const gameState = {
+    activePlayers: [],
+    checkWinner: function () {
+        // check if all players .stand || .busted
+        // check for players who stand: which is highest?
+        // highest score wins: 3 : 2 on points spent
+        // draw: players regain bet
+        console.log('checkWinner is called')
+    }
+
+}
+
+
 //define player class: instances of Player will be used in state
 class Player {
     constructor(id) {
@@ -32,7 +46,7 @@ class Player {
         this.hasCards.reduce((acc, currentCard) => {
             if (acc > 21 && currentCard.name === 'ace') {
                 currentCard.value = 1
-            } 
+            }
             if (acc > 21) {
                 this.busted = true
             }
@@ -42,18 +56,6 @@ class Player {
         }, score)
         return score
     }
-}
-
-const gameState = {
-    activePlayers: [],
-    checkWinner: function () {
-        // check if all players .stand || .busted
-        // check for players who stand: which is highest?
-        // highest score wins: 3 : 2 on points spent
-        // draw: players regain bet
-        console.log('checkWinner is called')
-    }
-
 }
 
 const deck = [
@@ -106,25 +108,27 @@ const deck = [
         name: 'Jack'
     },
     {
-        value: 11 || 1,
+        value: 11,
         name: 'Ace'
     },
 ]
 
 // this function will draw a card and update the gameState
 // User.addCard method will be used to add a new card to user
-// create card
-function drawRandomCard() {
+// create card 
+function drawRandomCard () {
     const index = Math.floor(Math.random() * (13 - 0)) + 0;
     const drawnCard = deck[index]
-    const cardValue = drawnCard.value
-    this.hasCards.push(drawnCard) // for now, push into handArray
+
+    //this.hasCards.push(drawnCard) // for now, push into handArray
+
     Card //create new card in database, value is equal to drawn card
-    create({ value: cardValue, userId: req.user })
+        .create({ ...drawnCard, userId: req.user })
         .then(createdCard => {
             //link card to user model
             req.user.addCard(createdCard.id)
         })
+
     console.log('INDEX', index, 'CARD', deck[index], 'VALUE', cardValue)
 }
 
@@ -163,4 +167,4 @@ function createGameData(req, res, next) {
     return gameState
 }
 
-router.post(`/lobby/${id}`, auth, createGameData)
+router.put(`/lobby/${id}`, auth, createGameData)

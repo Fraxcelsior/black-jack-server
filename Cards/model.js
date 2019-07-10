@@ -3,17 +3,20 @@ const sequelize = require('../db')
 const User = require('../User/model')
 
 
-const Card = sequelize.define('cards', {
-  value: {
-    type:Sequelize.INTEGER
+const Card = sequelize.define(
+  'cards', 
+  {
+    value: Sequelize.INTEGER,
+    name: Sequelize.STRING
+  },
+  { 
+    tableName: 'cards',
+    timestamps: false 
   }
-},
-{ 
-  tableName: 'cards',
-  timestamps: false 
-}
 )
-//User.addCard
+
+// User.addCard
+// Card.belongsTo(User)
 User.hasMany(Card)
 
 

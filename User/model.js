@@ -2,14 +2,14 @@ const Sequelize = require('sequelize')
 const sequelize = require('../db')
 
 const User = sequelize.define('users', {
-  name: {
-    type: Sequelize.STRING
-  },
-  password: {
-    type: Sequelize.STRING
-  },
-  points: {
-    type: Sequelize.INTEGER
+  name: Sequelize.STRING,
+  password: Sequelize.STRING,
+  points: Sequelize.INTEGER,
+  stand: Sequelize.BOOLEAN,
+  busted: Sequelize.BOOLEAN,
+  value: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
   }
 },
   {
