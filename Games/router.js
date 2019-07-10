@@ -2,6 +2,7 @@ const { Router } = require('express')
 const Sse = require('json-sse')
 const auth = require('../Auth/middleware')
 const Game = require('./model')
+const User = require('../User/model')
 
 const router = new Router()
 // stream sends data
@@ -36,8 +37,8 @@ router.get('/testgames', (req, res, next) => {
 router.get('/testusers', (req, res, next) => {
     User
         .findAll()
-        .then(games => {
-            res.status(200).json({ games })
+        .then(users => {
+            res.status(200).json({ users })
         })
         .catch(error => next(error))
 })
