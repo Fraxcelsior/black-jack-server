@@ -22,8 +22,8 @@ function onStream(req, res) {
 // when fetching lobby URL, onMessage is called to list all available games
 // auth needs to be added before onStream
 router.get('/lobby', auth, onStream)
-/*
-router.get('/test', (req, res, next) => {
+
+router.get('/testgames', (req, res, next) => {
     Game
         .findAll()
         .then(games => {
@@ -31,7 +31,18 @@ router.get('/test', (req, res, next) => {
         })
         .catch(error => next(error))
 })
-*/
+
+
+router.get('/testusers', (req, res, next) => {
+    User
+        .findAll()
+        .then(games => {
+            res.status(200).json({ games })
+        })
+        .catch(error => next(error))
+})
+
+
 function onCreateGame(req, res, next) {
     const { name } = req.body
 
