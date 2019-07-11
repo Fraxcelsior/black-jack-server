@@ -161,7 +161,7 @@ function onStream(req, res) {
         console.log('ONSTREAM GAME', stream)
     }
 }
-router.get(`/lobby/${id}`, auth, onStream)
+//router.get(`/lobby/${id}`, auth, onStream)
 
 function updateUser(req, res, next) {
     req.user.update(req.body)
