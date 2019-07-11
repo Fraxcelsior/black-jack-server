@@ -22,7 +22,7 @@ function onStream(request, response) {
 }
 // when fetching lobby URL, onMessage is called to list all available games
 // auth needs to be added before onStream
-router.get('/stream', auth, onStream)
+router.get('/stream', onStream)
 
 router.get('/testgames', (req, res, next) => {
     Game
