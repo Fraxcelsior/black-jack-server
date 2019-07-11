@@ -9,44 +9,58 @@ const router = new Router()
 // stream sends data
 const stream = new Sse()
 
-
-const gameState = {
-    activePlayers: [],
-    checkWinner: function () {
-        // check if all players .stand || .busted
-        // check for players who stand: which is highest?
-        // highest score wins: 3 : 2 on points spent
-        // draw: players regain bet
-        console.log('checkWinner is called')
+// method to draw initial hand each round
+function initialiseStartingHand() {
+    if (this.hasCards.length < 2) {
+        drawRandomCard()
     }
-
 }
 
+function countHandValue() {
+    //first we create a new array that holds the numeric values of the current hand
+    const numericHand = hasCards.map(card => {
+        return card.value
+    })
 
+    //Then we create a let(handValue) that returns the total score of the hand
+    let handValue = numericHand.reduce((acc, currentCard) => {
+        console.log('ACC', acc, 'CARD', currentCard)
 
-    // method to draw initial hand each round
-    function initialiseStartingHand() {
-        if (this.hasCards.length < 2) {
-            drawRandomCard()
+        return acc + currentCard
+
+    }, 0)
+    // After calculating hand score, we'll check if any drawn aces should be 11 or 1
+    // first we define the starting index [0] for the while-loop
+    let index = 0
+    // this while loop will start if index is les than handsize AND if the handvalue is greater than 10
+    while (index < numericHand.length && handValue > 10) {
+        // card is the current card being checked (through index)
+        let card = numericHand[index]
+        // if the current card has a value, it's an ace, thus true
+        isAce = card === 11
+        // check if the card is an ace and the hand score would be greater than 21
+        if (isAce && handValue > 21) {
+            //in that case, ace should be 1, so we simply deduct 10 from handscore
+            return handValue -= 10
         }
+        //for looping purpose, we increment index, so it will run the checks for all cards in hand
+        index++
     }
-    // method to score hand, still need to apply ace logic
-    function countHandValue() {
-        let score = 0
-
-        this.hasCards.reduce((acc, currentCard) => {
-            if (acc > 21 && currentCard.name === 'ace') {
-                currentCard.value = 1
-            }
-            if (acc > 21) {
-                this.busted = true
-            }
-            else {
-                acc + card
-            }
-        }, score)
-        return score
+    // check if the total hand has a score greater than 21, user will bust
+    if (handValue > 21) {
+        console.log('BUSTED!')//update user: busted = true
+        return handValue
     }
+    // if handscore is exactly 21: player has blackjack
+    if (handValue === 21) {
+        console.log('BLACKJACK!!')//update user: wins = true
+        return handValue
+    }
+    //otherwise, simply return handvalue and allow player to hit or stand
+    else {
+        return handValue
+    }
+}
 
 
 const deck = [
@@ -107,7 +121,7 @@ const deck = [
 // this function will draw a card and update the gameState
 // User.addCard method will be used to add a new card to user
 // create card 
-function drawRandomCard () {
+function drawRandomCard() {
     const index = Math.floor(Math.random() * (13 - 0)) + 0;
     const drawnCard = deck[index]
 
@@ -149,13 +163,31 @@ function onStream(req, res) {
 }
 router.get(`/lobby/${id}`, auth, onStream)
 
-function createGameData(req, res, next) {
-    //this function will handle the input from client, update gameState and send it back
-    const json = JSON.stringify(gameState)
-    stream.updateInit(json)
-    stream.init(req, res)
-
-    return gameState
+function updateUser(req, res, next) {
+    req.user.update(req.body)
+        .then(userState => {
+            const json = JSON.stringify(userState)
+            stream.updateInit(json)
+            stream.init(req, res)
+        })
+        .catch(error => next(error))
 }
 
-router.put(`/lobby/${id}`, auth, createGameData)
+router.put(`/games/:id`, auth, updateUser)
+router.post(`/games/:id`, auth, drawRandomCard)
+
+router.get(`/streamdata/:id`, (req, res, next) => {
+    const id = req.params.id
+    User
+        .findAll(
+            {where: {gameId: id } }
+        )
+        .then(users => {
+            const json = JSON.stringify(users)
+            stream.updateInit(json)
+            stream.init(req, res)        
+        })
+        .catch(error => next(error))
+})
+
+module.exports = router
