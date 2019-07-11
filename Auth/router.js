@@ -55,7 +55,7 @@ router.post('/signup', (req, res, next) => {
     password: bcrypt.hashSync(req.body.password, 10)
   }
   if(!req.body.name || !req.body.password) {
-    res.status(404).json({message: 'password or email unknown'}).end()
+    res.status(404).json({message: 'password or email unknown'})//.end()
   }else {
     User
       .create(user)
