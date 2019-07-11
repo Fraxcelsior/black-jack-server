@@ -8,6 +8,10 @@ const Game = sequelize.define(
         name: {
             type: Sequelize.STRING,
             field: 'name'
+        },
+        status: {
+            type: Sequelize.STRING,
+            defaultValue: 'joining'
         }
     },
     { tableName: 'games'}
