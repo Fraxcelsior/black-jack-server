@@ -9,20 +9,20 @@ const router = new Router()
 const stream = new Sse()
 
 // here we listen for new clients and set initial data (gamestate)
-function onStream(req, res) {
+function onStream(request, response) {
     Game
         .findAll()
         .then(games => {
             const json = JSON.stringify(games)
             stream.updateInit(json)
-            stream.init(req, res)
+            stream.init(request, response)
             console.log('ONSTREAM', stream)
         })
         .catch(error => next(error))
 }
 // when fetching lobby URL, onMessage is called to list all available games
 // auth needs to be added before onStream
-router.get('/lobby', auth, onStream)
+router.get('/streamlobby', auth, onStream)
 
 router.get('/testgames', (req, res, next) => {
     Game
@@ -43,7 +43,6 @@ router.get('/testusers', (req, res, next) => {
         .catch(error => next(error))
 })
 
-
 function onCreateGame(req, res, next) {
     const { name } = req.body
 
@@ -56,17 +55,18 @@ function onCreateGame(req, res, next) {
             req.user.save()
                 .then(
                     () =>
-                        Game.findAll()
+                        Game
+                            .findAll()
                             .then(games => {
                                 const json = JSON.stringify(games)
                                 stream.updateInit(json)
                                 stream.send(json)
                                 console.log('ONCREATE', stream)
                             })
-                            .then(games => res.json({ games })))
+                            .then(games => res.send( games )))
         })
         .catch(error => next(error))
 }
-router.post('/lobby', auth, onCreateGame)
+router.post('/games', auth, onCreateGame)
 
 module.exports = router
