@@ -165,7 +165,7 @@ function drawRandomCard(req, res) {
         .create({ ...drawnCard, userId: req.user.id })
         //.then(createdCard => req.user.addCard(createdCard.id))
         .then(()=> countHandValue(req, res))
-        .then(()=> checkEnd(req, res))
+        //.then(()=> checkEnd(req, res))
         .catch(error => console.log('DRAWCARD', error))
 }
 
@@ -214,7 +214,8 @@ function countHandValue(req, res) {
                 console.log('BUSTED!')//update user: busted = true
                 return req.user
                     .update({
-                        busted: true
+                        busted: true,
+                        handScore: 0
                     })
                     .then(() => {
                         return checkEnd(req, res)
