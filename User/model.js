@@ -4,12 +4,25 @@ const sequelize = require('../db')
 const User = sequelize.define('users', {
   name: Sequelize.STRING,
   password: Sequelize.STRING,
-  points: Sequelize.INTEGER,
-  stand: Sequelize.BOOLEAN,
-  busted: Sequelize.BOOLEAN,
-  value: {
+  points: {
     type: Sequelize.INTEGER,
     defaultValue: 0
+  },
+  stand: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  busted: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
+  handScore: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  },
+  wonRound: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   }
 },
   {
